@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const loadData = function(filePath) {
-  beverageDetails = fs.readFileSync(filePath, "utf8");
+  beverageDetails = JSON.parse(fs.readFileSync(filePath, "utf8"));
   return beverageDetails;
 };
 

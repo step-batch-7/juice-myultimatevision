@@ -7,20 +7,33 @@ const beverageData = JSON.parse(
 
 describe("queryBeverages", function() {
   it("should display the beverages history of given employ id if exists", function() {
-    const actual = queryBeverages(beverageData, "12345");
+    const loadData = function(path) {
+      return JSON.parse(fs.readFileSync(path));
+    };
+    const actual = queryBeverages(
+      ["--empId", "12345"],
+      loadData,
+      "./src/beverageData.json"
+    );
     const expected = [
-      {
-        beverage: "orange",
-        qty: 1,
-        date: "2019-11-22T09:55:53.437Z"
-      }
-    ];
+      "empId,beverage,qty,date",
+      "12345,orange,1,2019-11-26T03:51:44.546Z",
+      "juices: 1"
+    ].join("\n");
     assert.deepStrictEqual(actual, expected);
   });
 
   it("should display the error msg when given employ beverage history not exists", function() {
-    const actual = queryBeverages(beverageData, "12233");
-    const expected = ["no previous records"];
+    const loadData = function(path) {
+      return JSON.parse(fs.readFileSync(path));
+    };
+
+    const actual = queryBeverages(
+      ["--empId", "12346"],
+      loadData,
+      "./src/beverageData.json"
+    );
+    const expected = "no previous records";
     assert.deepStrictEqual(actual, expected);
   });
 });
