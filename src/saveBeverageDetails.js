@@ -17,7 +17,7 @@ const createUsage = function() {
   const usage = [
     "Usage :",
     "node beverage.js ",
-    "--query",
+    "--save",
     "[--empId employId]",
     "[--beverage beveragename]",
     "[qty quantity]"

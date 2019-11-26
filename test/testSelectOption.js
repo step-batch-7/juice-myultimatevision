@@ -92,6 +92,7 @@ describe("selectOption", function() {
       const expected = [
         "Usage :",
         "node beverage.js ",
+        "--save",
         "[--empId employId]",
         "[--beverage beveragename]",
         "[qty quantity]"
@@ -251,7 +252,7 @@ describe("selectOption", function() {
         loadData,
         "./src/beverageData.json"
       );
-      const expected = "usage :\nnode beverage.js [empId id]";
+      const expected = "usage :\nnode beverage.js --query [empId id]";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -332,7 +333,7 @@ describe("selectOption", function() {
         getDate,
         "2019-11-26T03:51:44.546Z"
       );
-      const expected = "usage :\nnode beverage.js [empId id]";
+      const expected = "usage :\nnode beverage.js --query [empId id]";
       assert.deepStrictEqual(actual, expected);
     });
   });

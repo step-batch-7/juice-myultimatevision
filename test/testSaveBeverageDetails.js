@@ -106,6 +106,7 @@ describe("saveBeverages", function() {
     const expected = [
       "Usage :",
       "node beverage.js ",
+      "--save",
       "[--empId employId]",
       "[--beverage beveragename]",
       "[qty quantity]"
@@ -137,6 +138,7 @@ describe("saveBeverages", function() {
     const expected = [
       "Usage :",
       "node beverage.js ",
+      "--save",
       "[--empId employId]",
       "[--beverage beveragename]",
       "[qty quantity]"

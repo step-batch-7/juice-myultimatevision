@@ -58,7 +58,7 @@ describe("queryBeverages", function() {
       loadData,
       "./src/beverageData.json"
     );
-    const expected = "usage :\nnode beverage.js [empId id]";
+    const expected = "usage :\nnode beverage.js --query [empId id]";
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -72,7 +72,7 @@ describe("queryBeverages", function() {
       loadData,
       "./src/beverageData.json"
     );
-    const expected = "usage :\nnode beverage.js [empId id]";
+    const expected = "usage :\nnode beverage.js --query [empId id]";
     assert.deepStrictEqual(actual, expected);
   });
 });
