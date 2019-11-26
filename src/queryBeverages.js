@@ -1,17 +1,23 @@
-const queryBeverages = function(userArguments, loadData, filePath) {
-  const employId = userArguments[userArguments.indexOf("--empId") + 1];
-  const beverageData = loadData(filePath);
-  const errorMessage = "no previous records";
-  console.log(employId);
-
-  if (beverageData[employId] == undefined) {
-    return errorMessage;
-  }
-  const employBeverageData = beverageData[employId];
-  return formatData(employBeverageData, employId);
+const fs = require("fs");
+const isFileExists = function(filePath) {
+  return fs.existsSync(filePath);
 };
 
-const formatData = function(employBeverageData, employId) {
+const queryBeverages = function(userArguments, loadData, filePath) {
+  if (!isFileExists(filePath)) return "file not found";
+  if (!userArguments.includes("--empId") || userArguments.length != 2)
+    return "usage :\nnode beverage.js [empId id]";
+
+  const employId = userArguments[userArguments.indexOf("--empId") + 1];
+  const beverageData = loadData(filePath);
+  const employBeverageData = beverageData[employId];
+
+  if (employBeverageData == undefined) return "no previous records";
+
+  return formatData(employBeverageData);
+};
+
+const formatData = function(employBeverageData) {
   const formatedBeverageDetails = [];
   const headers = "empId,beverage,qty,date";
   let noOfJuices = 0;
