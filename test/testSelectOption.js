@@ -144,7 +144,7 @@ describe("selectOption", function() {
     it("should  add employ beverage data to file when previous transactions of employ not present for save", function() {
       const filePath = "./src/beverageData.json";
       const loadData = function(filePath) {
-        return filePath;
+        return {};
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -175,7 +175,7 @@ describe("selectOption", function() {
 
     it("should  create and save employ beverage data to file if file not exists for save", function() {
       const loadData = function(filePath) {
-        return filePath;
+        return {};
       };
 
       const writeData = function(filePath, beverageData) {};
