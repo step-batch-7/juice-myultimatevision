@@ -12,13 +12,9 @@ const selectOption = function(
   date
 ) {
   const actions = { "--save": saveBeverageDetails, "--query": queryBeverages };
-  const errorMessage = ["file not found"];
+  const errorMessage = "invalid transaction";
   action = actions[userArguments[0]];
-
-  if (
-    action == undefined ||
-    (!isFileExists(filePath) && userArguments[0] != "--save")
-  ) {
+  if (action == undefined) {
     return errorMessage;
   }
 
@@ -31,10 +27,6 @@ const selectOption = function(
     date
   );
   return beverageDetails;
-};
-
-const isFileExists = function(filePath) {
-  return fs.existsSync(filePath);
 };
 
 exports.selectOption = selectOption;

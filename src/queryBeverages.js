@@ -6,7 +6,7 @@ const isFileExists = function(filePath) {
 const queryBeverages = function(userArguments, loadData, filePath) {
   if (!isFileExists(filePath)) return "file not found";
   if (!userArguments.includes("--empId") || userArguments.length != 2)
-    return "usage :\nnode beverage.js [empId id]";
+    return "usage :\nnode beverage.js --query [empId id]";
 
   const employId = userArguments[userArguments.indexOf("--empId") + 1];
   const beverageData = loadData(filePath);

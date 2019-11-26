@@ -10,7 +10,7 @@ const writeData = function(filePath, beverageDetails) {
 };
 
 const getDate = function(date) {
-  return new Date();
+  return new Date().toJSON();
 };
 
 exports.loadData = loadData;
