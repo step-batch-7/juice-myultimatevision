@@ -1,10 +1,33 @@
 const assert = require("assert");
-const filePath = "./src/beverageData.json";
 const saveBeverageDetails = require("../src/saveBeverageDetails")
   .saveBeverageDetails;
 
 describe("saveBeverages", function() {
-  it("should  save employ beverage data to file", function() {
+  it("should  create and save employ beverage data to file if file not exists", function() {
+    const loadData = function(filePath) {
+      return filePath;
+    };
+
+    const writeData = function(filePath, beverageData) {};
+    const getDate = function(date) {
+      return date;
+    };
+    const date = "2019-11-25T02:59:29.363z";
+    const actual = saveBeverageDetails(
+      ["--empId", "12343", "--qty", "1", "--beverage", "pine-apple"],
+      loadData,
+      "./src/beverage",
+      writeData,
+      getDate,
+      date
+    );
+    const expected =
+      "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+    assert.deepStrictEqual(actual, expected);
+  });
+
+  it("should  add employ beverage data to file when previous transactions of employ not present", function() {
+    const filePath = "./src/beverageData.json";
     const loadData = function(filePath) {
       return filePath;
     };
@@ -27,33 +50,98 @@ describe("saveBeverages", function() {
     assert.deepStrictEqual(actual, expected);
   });
 
-  // it("should create an error message if any details missing", function() {
-  //   const loadData = function(filePath) {
-  //     return filePath;
-  //   };
+  it("should  add employ beverage data to file when previous transactions of employ present", function() {
+    const filePath = "./src/beverageData.json";
+    const loadData = function(filePath) {
+      return {
+        "12343": [
+          {
+            empId: "12343",
+            beverage: "orange",
+            qty: "1",
+            date: "2019-11-26T03:50:39.363Z"
+          }
+        ]
+      };
+    };
 
-  //   const writeData = function(filePath, beverageData) {};
-  //   const getDate = function(date) {
-  //     return date;
-  //   };
-  //   const date = "2019-11-25T02:59:29.363z";
-  //   const actual = saveBeverageDetails(
-  //     ["--empId", "12343", "--qty", "1"],
-  //     loadData,
-  //     filePath,
-  //     writeData,
-  //     getDate,
-  //     date
-  //   );
+    const writeData = function(filePath, beverageData) {};
+    const getDate = function(date) {
+      return date;
+    };
+    const date = "2019-11-25T02:59:29.363z";
+    const actual = saveBeverageDetails(
+      ["--empId", "12343", "--qty", "1", "--beverage", "pine-apple"],
+      loadData,
+      filePath,
+      writeData,
+      getDate,
+      date
+    );
+    const expected =
+      "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+    assert.deepStrictEqual(actual, expected);
+  });
 
-  //   const expected = [
-  //     "Usage :",
-  //     "node beverage.js ",
-  //     "[--empId employId]",
-  //     "[--beverage beveragename]",
-  //     "[qty quantity]"
-  //   ].join("\n");
+  it("should create usage when given arguments are not sufficient", function() {
+    const filePath = "./src/beverageData.json";
+    const loadData = function(filePath) {
+      return {};
+    };
 
-  //   assert.deepStrictEqual(actual, expected);
-  // });
+    const writeData = function(filePath, beverageData) {};
+    const getDate = function(date) {
+      return date;
+    };
+    const date = "2019-11-25T02:59:29.363z";
+    const actual = saveBeverageDetails(
+      ["--empId", "12343", "--qty", "1"],
+      loadData,
+      filePath,
+      writeData,
+      getDate,
+      date
+    );
+
+    const expected = [
+      "Usage :",
+      "node beverage.js ",
+      "[--empId employId]",
+      "[--beverage beveragename]",
+      "[qty quantity]"
+    ].join("\n");
+
+    assert.deepStrictEqual(actual, expected);
+  });
+
+  it("should create usage when arguments are invalid", function() {
+    const filePath = "./src/beverageData.json";
+    const loadData = function(filePath) {
+      return {};
+    };
+
+    const writeData = function(filePath, beverageData) {};
+    const getDate = function(date) {
+      return date;
+    };
+    const date = "2019-11-25T02:59:29.363z";
+    const actual = saveBeverageDetails(
+      ["--empId", "12343", "--qty", "1"],
+      loadData,
+      filePath,
+      writeData,
+      getDate,
+      date
+    );
+
+    const expected = [
+      "Usage :",
+      "node beverage.js ",
+      "[--empId employId]",
+      "[--beverage beveragename]",
+      "[qty quantity]"
+    ].join("\n");
+
+    assert.deepStrictEqual(actual, expected);
+  });
 });

@@ -1,13 +1,47 @@
-//const fs = require("fs");
-//const previousBeverageInfo = fs.readFileSync("./src/beverageData.json");
+const fs = require("fs");
 const createNewTransaction = function(beverageDetails, getDate, date) {
-  const newBeverageDetails = {
+  const empBeverageData = {
     empId: beverageDetails[beverageDetails.indexOf("--empId") + 1],
     beverage: beverageDetails[beverageDetails.indexOf("--beverage") + 1],
     qty: beverageDetails[beverageDetails.indexOf("--qty") + 1],
     date: getDate(date)
   };
-  return newBeverageDetails;
+  return empBeverageData;
+};
+
+const isFileExists = function(filePath) {
+  return fs.existsSync(filePath);
+};
+
+const createUsage = function() {
+  const usage = [
+    "Usage :",
+    "node beverage.js ",
+    "[--empId employId]",
+    "[--beverage beveragename]",
+    "[qty quantity]"
+  ].join("\n");
+  return usage;
+};
+
+const isIncludesDetails = function(beverageDetails) {
+  const requiredDetails = ["--beverage", "--qty", "--empId"];
+  let flag = true;
+  for (let index = 0; index < requiredDetails.length; index++) {
+    if (
+      !beverageDetails.includes(requiredDetails[index]) ||
+      beverageDetails.indexOf(requiredDetails[index]) % 2 == 1
+    ) {
+      flag = false;
+    }
+  }
+  return flag;
+};
+
+const isValidDetails = function(beverageDetails) {
+  let flag = true;
+  flag = isIncludesDetails(beverageDetails) && beverageDetails.length == 6;
+  return flag;
 };
 
 const saveBeverageDetails = function(
@@ -18,35 +52,24 @@ const saveBeverageDetails = function(
   getDate,
   date
 ) {
-  const newBeverageDetails = createNewTransaction(
-    beverageDetails,
-    getDate,
-    date
-  );
+  const empBeverageData = createNewTransaction(beverageDetails, getDate, date);
+  let transactionData = {};
 
-  // if(isnotIncludesDetails(beverageDetails)) {
-  //   return createUsage;
-  // }
-  let beverageTransactionData = loadData(filePath);
-  beverageTransactionData = modifyTransactionData(
-    beverageTransactionData,
-    newBeverageDetails
-  );
-  writeData(filePath, JSON.stringify(beverageTransactionData));
-  return formatData(newBeverageDetails);
+  if (!isValidDetails(beverageDetails)) return createUsage();
+  if (isFileExists(filePath)) transactionData = loadData(filePath);
+  newTransactionData = modifyTransactionData(transactionData, empBeverageData);
+  writeData(filePath, JSON.stringify(newTransactionData));
+  return formatData(empBeverageData);
 };
 
-const modifyTransactionData = function(
-  beverageTransactionData,
-  newBeverageDetails
-) {
-  employId = newBeverageDetails["empId"];
-  if (beverageTransactionData[employId] == undefined) {
-    beverageTransactionData[employId] = [newBeverageDetails];
+const modifyTransactionData = function(TransactionData, empBeverageData) {
+  employId = empBeverageData["empId"];
+  if (TransactionData[employId] == undefined) {
+    TransactionData[employId] = [empBeverageData];
   } else {
-    beverageTransactionData[employId].push(newBeverageDetails);
+    TransactionData[employId].push(empBeverageData);
   }
-  return beverageTransactionData;
+  return TransactionData;
 };
 
 const formatData = function(beverageDetails) {

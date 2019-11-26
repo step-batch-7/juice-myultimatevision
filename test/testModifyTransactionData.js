@@ -15,6 +15,19 @@ describe("modifyTransactionData", function() {
     assert.deepStrictEqual(actual, expected);
   });
 
+  it("should create new employ transaction when previous transaction of employ not exists", function() {
+    const actual = modifyTransactionData(
+      { 1111: [{ empId: "1111", beverage: "orange", qty: 1 }] },
+      { empId: "1112", beverage: "pineApple", qty: 2 },
+      "1111"
+    );
+    const expected = {
+      1111: [{ empId: "1111", beverage: "orange", qty: 1 }],
+      1112: [{ empId: "1112", beverage: "pineApple", qty: 2 }]
+    };
+    assert.deepStrictEqual(actual, expected);
+  });
+
   it("should push to existing key when employ transactions already exists", function() {
     const actual = modifyTransactionData(
       { 1111: [{ empId: 1111, beverage: "orange", qty: 1 }] },
