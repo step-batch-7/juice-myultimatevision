@@ -21,8 +21,17 @@ describe("saveBeverages", function() {
       getDate,
       date
     );
-    const expected =
-      "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+    const expected = [
+      "transaction recorded:\nemploy id,beverage,quantity,date",
+      [
+        {
+          beverage: "pine-apple",
+          date: "2019-11-25T02:59:29.363z",
+          empId: "12343",
+          qty: "1"
+        }
+      ]
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -45,8 +54,17 @@ describe("saveBeverages", function() {
       getDate,
       date
     );
-    const expected =
-      "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+    const expected = [
+      "transaction recorded:\nemploy id,beverage,quantity,date",
+      [
+        {
+          beverage: "pine-apple",
+          date: "2019-11-25T02:59:29.363z",
+          empId: "12343",
+          qty: "1"
+        }
+      ]
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -78,8 +96,17 @@ describe("saveBeverages", function() {
       getDate,
       date
     );
-    const expected =
-      "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+    const expected = [
+      "transaction recorded:\nemploy id,beverage,quantity,date",
+      [
+        {
+          beverage: "pine-apple",
+          date: "2019-11-25T02:59:29.363z",
+          empId: "12343",
+          qty: "1"
+        }
+      ]
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -104,13 +131,16 @@ describe("saveBeverages", function() {
     );
 
     const expected = [
-      "Usage :",
-      "node beverage.js ",
-      "--save",
-      "[--empId employId]",
-      "[--beverage beveragename]",
-      "[qty quantity]"
-    ].join("\n");
+      [
+        "Usage :",
+        "node beverage.js ",
+        "--save",
+        "[--empId employId]",
+        "[--beverage beveragename]",
+        "[qty quantity]"
+      ].join("\n"),
+      []
+    ];
 
     assert.deepStrictEqual(actual, expected);
   });
@@ -136,13 +166,16 @@ describe("saveBeverages", function() {
     );
 
     const expected = [
-      "Usage :",
-      "node beverage.js ",
-      "--save",
-      "[--empId employId]",
-      "[--beverage beveragename]",
-      "[qty quantity]"
-    ].join("\n");
+      [
+        "Usage :",
+        "node beverage.js ",
+        "--save",
+        "[--empId employId]",
+        "[--beverage beveragename]",
+        "[qty quantity]"
+      ].join("\n"),
+      []
+    ];
 
     assert.deepStrictEqual(actual, expected);
   });

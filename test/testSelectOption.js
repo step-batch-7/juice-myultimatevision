@@ -64,8 +64,7 @@ describe("selectOption", function() {
         date
       );
       const expected =
-        "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1," +
-        date;
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-22T09:55:53.546z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -95,7 +94,7 @@ describe("selectOption", function() {
         "--save",
         "[--empId employId]",
         "[--beverage beveragename]",
-        "[qty quantity]"
+        "[qty quantity]\n"
       ].join("\n");
 
       assert.deepStrictEqual(actual, expected);
@@ -120,7 +119,7 @@ describe("selectOption", function() {
       const getDate = function(date) {
         return date;
       };
-      const date = "2019-11-25T02:59:29.363z";
+      const date = "2019-11-22T09:55:53.546z";
       const actual = selectOption(
         [
           "--save",
@@ -138,7 +137,7 @@ describe("selectOption", function() {
         date
       );
       const expected =
-        "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-22T09:55:53.546z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -170,7 +169,7 @@ describe("selectOption", function() {
         date
       );
       const expected =
-        "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -201,7 +200,7 @@ describe("selectOption", function() {
         date
       );
       const expected =
-        "transaction recorded :\nempId,beverage,qty,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z";
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z\n";
       assert.deepStrictEqual(actual, expected);
     });
   });
@@ -234,11 +233,8 @@ describe("selectOption", function() {
         getDate,
         "2019-11-26T03:50:39.363Z"
       );
-      const expected = [
-        "empId,beverage,qty,date",
-        "12343,orange,1,2019-11-26T03:50:39.363Z",
-        "juices: 1"
-      ].join("\n");
+      const expected =
+        "employId,beverage,quantity,date\n12343,orange,1,2019-11-26T03:50:39.363Z\nTotal juices :1";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -252,7 +248,7 @@ describe("selectOption", function() {
         loadData,
         "./src/beverageData.json"
       );
-      const expected = "usage :\nnode beverage.js --query [empId id]";
+      const expected = "usage :\nnode beverage.js --query [empId id]\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -284,9 +280,9 @@ describe("selectOption", function() {
         "2019-11-26T03:51:44.546Z"
       );
       const expected = [
-        "empId,beverage,qty,date",
+        "employId,beverage,quantity,date",
         "12345,orange,1,2019-11-26T03:51:44.546Z",
-        "juices: 1"
+        "Total juices :1"
       ].join("\n");
       assert.deepStrictEqual(actual, expected);
     });
@@ -301,7 +297,7 @@ describe("selectOption", function() {
         loadData,
         "./src/beverage.json"
       );
-      const expected = "file not found";
+      const expected = "file not found\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -333,7 +329,7 @@ describe("selectOption", function() {
         getDate,
         "2019-11-26T03:51:44.546Z"
       );
-      const expected = "usage :\nnode beverage.js --query [empId id]";
+      const expected = "usage :\nnode beverage.js --query [empId id]\n";
       assert.deepStrictEqual(actual, expected);
     });
   });

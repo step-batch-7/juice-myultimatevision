@@ -5,7 +5,16 @@ const fs = require("fs");
 describe("queryBeverages", function() {
   it("should display the beverages history of given employ id if exists", function() {
     const loadData = function(path) {
-      return JSON.parse(fs.readFileSync(path));
+      return {
+        "12345": [
+          {
+            empId: "12345",
+            beverage: "orange",
+            qty: "1",
+            date: "2019-11-26T03:51:44.546Z"
+          }
+        ]
+      };
     };
     const actual = queryBeverages(
       ["--empId", "12345"],
@@ -13,10 +22,17 @@ describe("queryBeverages", function() {
       "./src/beverageData.json"
     );
     const expected = [
-      "empId,beverage,qty,date",
-      "12345,orange,1,2019-11-26T03:51:44.546Z",
-      "juices: 1"
-    ].join("\n");
+      "employId,beverage,quantity,date",
+      [
+        {
+          empId: "12345",
+          beverage: "orange",
+          qty: "1",
+          date: "2019-11-26T03:51:44.546Z"
+        }
+      ],
+      "Total juices :1"
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -30,7 +46,7 @@ describe("queryBeverages", function() {
       loadData,
       "./src/beverageData.json"
     );
-    const expected = "no previous records";
+    const expected = ["no previous records", []];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -44,7 +60,7 @@ describe("queryBeverages", function() {
       loadData,
       "./src/beverage.json"
     );
-    const expected = "file not found";
+    const expected = ["file not found", []];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -58,7 +74,7 @@ describe("queryBeverages", function() {
       loadData,
       "./src/beverageData.json"
     );
-    const expected = "usage :\nnode beverage.js --query [empId id]";
+    const expected = ["usage :\nnode beverage.js --query [empId id]", []];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -72,7 +88,7 @@ describe("queryBeverages", function() {
       loadData,
       "./src/beverageData.json"
     );
-    const expected = "usage :\nnode beverage.js --query [empId id]";
+    const expected = ["usage :\nnode beverage.js --query [empId id]", []];
     assert.deepStrictEqual(actual, expected);
   });
 });

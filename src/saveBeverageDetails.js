@@ -15,13 +15,16 @@ const isFileExists = function(filePath) {
 
 const createUsage = function() {
   const usage = [
-    "Usage :",
-    "node beverage.js ",
-    "--save",
-    "[--empId employId]",
-    "[--beverage beveragename]",
-    "[qty quantity]"
-  ].join("\n");
+    [
+      "Usage :",
+      "node beverage.js ",
+      "--save",
+      "[--empId employId]",
+      "[--beverage beveragename]",
+      "[qty quantity]"
+    ].join("\n"),
+    []
+  ];
   return usage;
 };
 
@@ -60,7 +63,10 @@ const saveBeverageDetails = function(
   if (isFileExists(filePath)) transactionData = loadData(filePath);
   newTransactionData = modifyTransactionData(transactionData, empBeverageData);
   writeData(filePath, JSON.stringify(newTransactionData));
-  return formatData(empBeverageData);
+  return [
+    "transaction recorded:\nemploy id,beverage,quantity,date",
+    [empBeverageData]
+  ];
 };
 
 const modifyTransactionData = function(TransactionData, empBeverageData) {
@@ -71,17 +77,6 @@ const modifyTransactionData = function(TransactionData, empBeverageData) {
     TransactionData[employId].push(empBeverageData);
   }
   return TransactionData;
-};
-
-const formatData = function(beverageDetails) {
-  const formatedBeverageDetails = [];
-  const headers = "empId,beverage,qty,date";
-  const message = "transaction recorded :";
-  let beverageData = Object.values(beverageDetails).join(",");
-  formatedBeverageDetails.push(message);
-  formatedBeverageDetails.push(headers);
-  formatedBeverageDetails.push(beverageData);
-  return formatedBeverageDetails.join("\n");
 };
 
 exports.saveBeverageDetails = saveBeverageDetails;
