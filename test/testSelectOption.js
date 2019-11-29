@@ -1,5 +1,6 @@
 const selectOption = require("../src/selectOption").selectOption;
 const assert = require("assert");
+const fs = require("fs");
 
 describe("selectOption", function() {
   it("should create invalid transaction message when invalid operation given", function() {
@@ -40,7 +41,7 @@ describe("selectOption", function() {
         return date;
       };
       const loadData = function(path) {
-        return {};
+        return [];
       };
       const writeData = function(path, data) {};
       const filePath = "./src/beverageData.json";
@@ -71,7 +72,7 @@ describe("selectOption", function() {
     it("should create usage when given arguments are not sufficient for save", function() {
       const filePath = "./src/beverageData.json";
       const loadData = function(filePath) {
-        return {};
+        return [];
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -103,16 +104,14 @@ describe("selectOption", function() {
     it("should  add employ beverage data to file when previous transactions of employ present for save", function() {
       const filePath = "./src/beverageData.json";
       const loadData = function(filePath) {
-        return {
-          "12343": [
-            {
-              empId: "12343",
-              beverage: "orange",
-              qty: "1",
-              date: "2019-11-26T03:50:39.363Z"
-            }
-          ]
-        };
+        return [
+          {
+            empId: "12343",
+            beverage: "orange",
+            qty: "1",
+            date: "2019-11-26T03:50:39.363Z"
+          }
+        ];
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -144,7 +143,7 @@ describe("selectOption", function() {
     it("should  add employ beverage data to file when previous transactions of employ not present for save", function() {
       const filePath = "./src/beverageData.json";
       const loadData = function(filePath) {
-        return {};
+        return [];
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -175,7 +174,7 @@ describe("selectOption", function() {
 
     it("should  create and save employ beverage data to file if file not exists for save", function() {
       const loadData = function(filePath) {
-        return {};
+        return [];
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -208,16 +207,14 @@ describe("selectOption", function() {
   describe("queryBeverageDetails", function() {
     it("should display the beverages history of employ when arguments are valid for query", function() {
       const loadData = function(path) {
-        return {
-          "12343": [
-            {
-              empId: "12343",
-              beverage: "orange",
-              qty: "1",
-              date: "2019-11-26T03:50:39.363Z"
-            }
-          ]
-        };
+        return [
+          {
+            empId: "12343",
+            beverage: "orange",
+            qty: "1",
+            date: "2019-11-26T03:50:39.363Z"
+          }
+        ];
       };
 
       const getDate = function(date) {
@@ -228,7 +225,7 @@ describe("selectOption", function() {
       const actual = selectOption(
         ["--query", "--empId", "12343"],
         loadData,
-        "./src/beverageData.json",
+        "./data/beverageData.json",
         writeData,
         getDate,
         "2019-11-26T03:50:39.363Z"
@@ -240,31 +237,30 @@ describe("selectOption", function() {
 
     it("should display usage when given arguments not sufficient for query", function() {
       const loadData = function(path) {
-        return JSON.parse(fs.readFileSync(path));
+        return [];
       };
 
       const actual = selectOption(
         ["--query", "--empId"],
         loadData,
-        "./src/beverageData.json"
+        "./data/beverageData.json"
       );
-      const expected = "usage :\nnode beverage.js --query [empId id]\n";
+      const expected =
+        "usage :\nnode beverage.js --query [--empId id] [--date date]\n";
       assert.deepStrictEqual(actual, expected);
     });
 
     it("should display the beverages history of given employ id if exists for query", function() {
-      const filePath = "./src/beverageData.json";
+      const filePath = "./data/beverageData.json";
       const loadData = function(filePath) {
-        return {
-          "12345": [
-            {
-              empId: "12345",
-              beverage: "orange",
-              qty: "1",
-              date: "2019-11-26T03:51:44.546Z"
-            }
-          ]
-        };
+        return [
+          {
+            empId: "12345",
+            beverage: "orange",
+            qty: "1",
+            date: "2019-11-26T03:51:44.546Z"
+          }
+        ];
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -289,31 +285,29 @@ describe("selectOption", function() {
 
     it("should display file not found when given file path not exists for query", function() {
       const loadData = function(path) {
-        return JSON.parse(fs.readFileSync(path));
+        return [];
       };
 
       const actual = selectOption(
         ["--query", "--empId", "12346"],
         loadData,
-        "./src/beverage.json"
+        "./data/beverage.json"
       );
       const expected = "file not found\n";
       assert.deepStrictEqual(actual, expected);
     });
 
     it("should display usage when given arguments are invalid for query", function() {
-      const filePath = "./src/beverageData.json";
+      const filePath = "./data/beverageData.json";
       const loadData = function(filePath) {
-        return {
-          "12345": [
-            {
-              empId: "12345",
-              beverage: "orange",
-              qty: "1",
-              date: "2019-11-26T03:51:44.546Z"
-            }
-          ]
-        };
+        return [
+          {
+            empId: "12345",
+            beverage: "orange",
+            qty: "1",
+            date: "2019-11-26T03:51:44.546Z"
+          }
+        ];
       };
 
       const writeData = function(filePath, beverageData) {};
@@ -329,7 +323,8 @@ describe("selectOption", function() {
         getDate,
         "2019-11-26T03:51:44.546Z"
       );
-      const expected = "usage :\nnode beverage.js --query [empId id]\n";
+      const expected =
+        "usage :\nnode beverage.js --query [--empId id] [--date date]\n";
       assert.deepStrictEqual(actual, expected);
     });
   });

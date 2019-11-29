@@ -1,7 +1,6 @@
 const saveBeverageDetails = require("./saveBeverageDetails")
   .saveBeverageDetails;
 const queryBeverages = require("./queryBeverages").queryBeverages;
-const fs = require("fs");
 
 const selectOption = function(
   userArguments,
@@ -30,13 +29,27 @@ const selectOption = function(
 };
 
 const formatData = function(beverageDetails) {
+  //beverageDetails.reduce(function(beverageDetail) {})
   const formatedBeverageDetails = [];
   formatedBeverageDetails.push(beverageDetails[0]);
-  for (let index = 0; index < beverageDetails[1].length; index++) {
+  if (beverageDetails[1].length != 0)
     formatedBeverageDetails.push(
-      Object.values(beverageDetails[1][index]).join(",")
+      beverageDetails[1]
+        .map(function(beverageDetail) {
+          return [
+            beverageDetail.empId,
+            beverageDetail.beverage,
+            beverageDetail.qty,
+            beverageDetail.date
+          ];
+        })
+        .join("\n")
     );
-  }
+  // for (let index = 0; index < beverageDetails[1].length; index++) {
+  //   formatedBeverageDetails.push(
+  //     Object.values(beverageDetails[1][index]).join(",")
+  //   );
+  // }
   formatedBeverageDetails.push(beverageDetails.slice(2));
   return formatedBeverageDetails.join("\n");
 };

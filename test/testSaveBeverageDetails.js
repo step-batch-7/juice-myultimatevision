@@ -5,7 +5,7 @@ const saveBeverageDetails = require("../src/saveBeverageDetails")
 describe("saveBeverages", function() {
   it("should  create and save employ beverage data to file if file not exists", function() {
     const loadData = function(filePath) {
-      return {};
+      return [];
     };
 
     const writeData = function(filePath, beverageData) {};
@@ -38,7 +38,7 @@ describe("saveBeverages", function() {
   it("should  add employ beverage data to file when previous transactions of employ not present", function() {
     const filePath = "./src/beverageData.json";
     const loadData = function(filePath) {
-      return {};
+      return [];
     };
 
     const writeData = function(filePath, beverageData) {};
@@ -71,16 +71,14 @@ describe("saveBeverages", function() {
   it("should  add employ beverage data to file when previous transactions of employ present", function() {
     const filePath = "./src/beverageData.json";
     const loadData = function(filePath) {
-      return {
-        "12343": [
-          {
-            empId: "12343",
-            beverage: "orange",
-            qty: "1",
-            date: "2019-11-26T03:50:39.363Z"
-          }
-        ]
-      };
+      return [
+        {
+          empId: "12343",
+          beverage: "orange",
+          qty: "1",
+          date: "2019-11-26T03:50:39.363Z"
+        }
+      ];
     };
 
     const writeData = function(filePath, beverageData) {};
@@ -113,7 +111,7 @@ describe("saveBeverages", function() {
   it("should create usage when given arguments are not sufficient", function() {
     const filePath = "./src/beverageData.json";
     const loadData = function(filePath) {
-      return {};
+      return [];
     };
 
     const writeData = function(filePath, beverageData) {};
@@ -148,7 +146,7 @@ describe("saveBeverages", function() {
   it("should create usage when arguments are invalid", function() {
     const filePath = "./src/beverageData.json";
     const loadData = function(filePath) {
-      return {};
+      return [];
     };
 
     const writeData = function(filePath, beverageData) {};

@@ -1,7 +1,7 @@
 const selectOption = require("./src/selectOption").selectOption;
 const loadData = require("./src/utils").loadData;
 const writeData = require("./src/utils").writeData;
-const filePath = "./src/beverageData.json";
+const filePath = "./data/beverageData.json";
 const getDate = require("./src/utils").getDate;
 
 const main = function(
