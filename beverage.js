@@ -1,20 +1,17 @@
 const selectOption = require("./src/selectOption").selectOption;
-const loadData = require("./src/utils").loadData;
-const writeData = require("./src/utils").writeData;
-const filePath = "./data/beverageData.json";
-const getDate = require("./src/utils").getDate;
+const fs = require("fs");
 
-const main = function(
-  userArguments,
-  loadData,
-  writeData,
-  filePath,
-  getDate,
-  date
-) {
+const main = function() {
   console.log("Anna Juice Ltd");
-  console.log(
-    selectOption(userArguments, loadData, filePath, writeData, getDate, date)
-  );
+  const requiredProperties = {
+    loader: fs.readFileSync,
+    writer: fs.writeFileSync,
+    encoding: "utf8",
+    date: () => new Date(),
+    isFileExists: fs.existsSync,
+    filePath: "./data/beverageData.json"
+  };
+  const userArguments = process.argv.slice(2);
+  console.log(selectOption(userArguments, requiredProperties));
 };
-main(process.argv.slice(2), loadData, writeData, filePath, getDate, "");
+main();

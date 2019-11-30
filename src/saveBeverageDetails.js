@@ -1,17 +1,20 @@
 const fs = require("fs");
-const createNewTransaction = function(beverageDetails, getDate, date) {
+const loadData = require("./utils").loadData;
+const writeData = require("./utils").writeData;
+
+const createNewTransaction = function(beverageDetails, date) {
   const empBeverageData = {
     empId: beverageDetails[beverageDetails.indexOf("--empId") + 1],
     beverage: beverageDetails[beverageDetails.indexOf("--beverage") + 1],
     qty: beverageDetails[beverageDetails.indexOf("--qty") + 1],
-    date: getDate(date)
+    date: date().toJSON()
   };
   return empBeverageData;
 };
 
-const isFileExists = function(filePath) {
-  return fs.existsSync(filePath);
-};
+// const isFileExist = function(filePath) {
+//   return fs.existsSync(filePath);
+// };
 
 const createUsage = function() {
   const usage = [
@@ -43,21 +46,20 @@ const isValidDetails = function(beverageDetails) {
   return flag;
 };
 
-const saveBeverageDetails = function(
-  beverageDetails,
-  loadData,
-  filePath,
-  writeData,
-  getDate,
-  date
-) {
-  const empBeverageData = createNewTransaction(beverageDetails, getDate, date);
-  let transactionData = [];
-
+const saveBeverageDetails = function(beverageDetails, requiredProperties) {
+  const {
+    loader,
+    writer,
+    encoding,
+    date,
+    isFileExists,
+    filePath
+  } = requiredProperties;
+  const empBeverageData = createNewTransaction(beverageDetails, date);
   if (!isValidDetails(beverageDetails)) return createUsage();
-  if (isFileExists(filePath)) transactionData = loadData(filePath);
+  transactionData = loadData(filePath, loader, isFileExists, encoding);
   transactionData.push(empBeverageData);
-  writeData(filePath, JSON.stringify(transactionData));
+  writeData(filePath, writer, transactionData, encoding);
   return [
     "transaction recorded:\nemploy id,beverage,quantity,date",
     [empBeverageData]

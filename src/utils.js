@@ -1,18 +1,15 @@
 const fs = require("fs");
 
-const loadData = function(filePath) {
-  beverageDetails = JSON.parse(fs.readFileSync(filePath, "utf8"));
+const loadData = function(filePath, read, isFileExists, encoding) {
+  let beverageDetails = [];
+  if (isFileExists(filePath))
+    beverageDetails = JSON.parse(read(filePath, encoding));
   return beverageDetails;
 };
 
-const writeData = function(filePath, beverageDetails) {
-  fs.writeFileSync(filePath, beverageDetails, "utf8");
-};
-
-const getDate = function(date) {
-  return new Date().toJSON();
+const writeData = function(filePath, write, beverageDetails, encoding) {
+  write(filePath, JSON.stringify(beverageDetails), encoding);
 };
 
 exports.loadData = loadData;
 exports.writeData = writeData;
-exports.getDate = getDate;

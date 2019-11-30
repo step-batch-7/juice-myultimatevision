@@ -4,29 +4,30 @@ const saveBeverageDetails = require("../src/saveBeverageDetails")
 
 describe("saveBeverages", function() {
   it("should  create and save employ beverage data to file if file not exists", function() {
-    const loadData = function(filePath) {
-      return [];
+    const userArguments = [
+      "--empId",
+      "12343",
+      "--qty",
+      "1",
+      "--beverage",
+      "pine-apple"
+    ];
+    const requiredProperties = {
+      loader: (filePath, encodingType) => "[]",
+      writer: (filePath, transactionsRecord, encodingType) => undefined,
+      date: () => new Date("2019-11-25T02:59:29.363Z"),
+      filePath: "somePath",
+      encoding: "utf-8",
+      isFileExists: filePath => true
     };
 
-    const writeData = function(filePath, beverageData) {};
-    const getDate = function(date) {
-      return date;
-    };
-    const date = "2019-11-25T02:59:29.363z";
-    const actual = saveBeverageDetails(
-      ["--empId", "12343", "--qty", "1", "--beverage", "pine-apple"],
-      loadData,
-      "./src/beverage",
-      writeData,
-      getDate,
-      date
-    );
+    const actual = saveBeverageDetails(userArguments, requiredProperties);
     const expected = [
       "transaction recorded:\nemploy id,beverage,quantity,date",
       [
         {
           beverage: "pine-apple",
-          date: "2019-11-25T02:59:29.363z",
+          date: "2019-11-25T02:59:29.363Z",
           empId: "12343",
           qty: "1"
         }
@@ -36,30 +37,30 @@ describe("saveBeverages", function() {
   });
 
   it("should  add employ beverage data to file when previous transactions of employ not present", function() {
-    const filePath = "./src/beverageData.json";
-    const loadData = function(filePath) {
-      return [];
+    const userArguments = [
+      "--empId",
+      "12343",
+      "--qty",
+      "1",
+      "--beverage",
+      "pine-apple"
+    ];
+    const requiredProperties = {
+      loader: (filePath, encodingType) => "[]",
+      writer: (filePath, transactionsRecord, encodingType) => true,
+      date: () => new Date("2019-11-25T02:59:29.363Z"),
+      filePath: "somePath",
+      encoding: "utf-8",
+      isFileExists: filePath => true
     };
 
-    const writeData = function(filePath, beverageData) {};
-    const getDate = function(date) {
-      return date;
-    };
-    const date = "2019-11-25T02:59:29.363z";
-    const actual = saveBeverageDetails(
-      ["--empId", "12343", "--qty", "1", "--beverage", "pine-apple"],
-      loadData,
-      filePath,
-      writeData,
-      getDate,
-      date
-    );
+    const actual = saveBeverageDetails(userArguments, requiredProperties);
     const expected = [
       "transaction recorded:\nemploy id,beverage,quantity,date",
       [
         {
           beverage: "pine-apple",
-          date: "2019-11-25T02:59:29.363z",
+          date: "2019-11-25T02:59:29.363Z",
           empId: "12343",
           qty: "1"
         }
@@ -69,37 +70,31 @@ describe("saveBeverages", function() {
   });
 
   it("should  add employ beverage data to file when previous transactions of employ present", function() {
-    const filePath = "./src/beverageData.json";
-    const loadData = function(filePath) {
-      return [
-        {
-          empId: "12343",
-          beverage: "orange",
-          qty: "1",
-          date: "2019-11-26T03:50:39.363Z"
-        }
-      ];
+    const userArguments = [
+      "--empId",
+      "12343",
+      "--qty",
+      "1",
+      "--beverage",
+      "pine-apple"
+    ];
+    const requiredProperties = {
+      loader: (filePath, encoding) =>
+        '[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":"2019-11-27T05:56:20.097Z" }]',
+      writer: (filePath, transactionsRecord, encodingType) => true,
+      date: () => new Date("2019-11-25T02:59:29.363Z"),
+      filePath: "somePath",
+      encoding: "utf-8",
+      isFileExists: filePath => true
     };
 
-    const writeData = function(filePath, beverageData) {};
-    const getDate = function(date) {
-      return date;
-    };
-    const date = "2019-11-25T02:59:29.363z";
-    const actual = saveBeverageDetails(
-      ["--empId", "12343", "--qty", "1", "--beverage", "pine-apple"],
-      loadData,
-      filePath,
-      writeData,
-      getDate,
-      date
-    );
+    const actual = saveBeverageDetails(userArguments, requiredProperties);
     const expected = [
       "transaction recorded:\nemploy id,beverage,quantity,date",
       [
         {
           beverage: "pine-apple",
-          date: "2019-11-25T02:59:29.363z",
+          date: "2019-11-25T02:59:29.363Z",
           empId: "12343",
           qty: "1"
         }
@@ -109,24 +104,18 @@ describe("saveBeverages", function() {
   });
 
   it("should create usage when given arguments are not sufficient", function() {
-    const filePath = "./src/beverageData.json";
-    const loadData = function(filePath) {
-      return [];
+    const userArguments = ["--empId", "12343", "--qty", "1"];
+    const requiredProperties = {
+      loader: (filePath, encoding) =>
+        '[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":"2019-11-27T05:56:20.097Z" }]',
+      writer: (filePath, transactionsRecord, encodingType) => true,
+      date: () => new Date("2019-11-25T02:59:29.363z"),
+      filePath: "somePath",
+      encoding: "utf-8",
+      isFileExists: filePath => true
     };
 
-    const writeData = function(filePath, beverageData) {};
-    const getDate = function(date) {
-      return date;
-    };
-    const date = "2019-11-25T02:59:29.363z";
-    const actual = saveBeverageDetails(
-      ["--empId", "12343", "--qty", "1"],
-      loadData,
-      filePath,
-      writeData,
-      getDate,
-      date
-    );
+    const actual = saveBeverageDetails(userArguments, requiredProperties);
 
     const expected = [
       [
@@ -144,24 +133,18 @@ describe("saveBeverages", function() {
   });
 
   it("should create usage when arguments are invalid", function() {
-    const filePath = "./src/beverageData.json";
-    const loadData = function(filePath) {
-      return [];
+    const userArguments = ["--empId", "12343", "--qty", "1", "--bev", "apple"];
+    const requiredProperties = {
+      loader: (filePath, encoding) =>
+        '[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":"2019-11-27T05:56:20.097Z" }]',
+      writer: (filePath, transactionsRecord, encodingType) => true,
+      date: () => new Date("2019-11-25T02:59:29.363Z"),
+      filePath: "somePath",
+      encoding: "utf-8",
+      isFileExists: filePath => true
     };
 
-    const writeData = function(filePath, beverageData) {};
-    const getDate = function(date) {
-      return date;
-    };
-    const date = "2019-11-25T02:59:29.363z";
-    const actual = saveBeverageDetails(
-      ["--empId", "12343", "--qty", "1"],
-      loadData,
-      filePath,
-      writeData,
-      getDate,
-      date
-    );
+    const actual = saveBeverageDetails(userArguments, requiredProperties);
 
     const expected = [
       [

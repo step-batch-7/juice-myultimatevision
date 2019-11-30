@@ -4,14 +4,6 @@ const fs = require("fs");
 
 describe("selectOption", function() {
   it("should create invalid transaction message when invalid operation given", function() {
-    const getDate = function(date) {
-      return date;
-    };
-    const loadData = function(path) {
-      return {};
-    };
-    const writeData = function(path, data) {};
-    const filePath = "./src/beverageData.json";
     const userArguments = [
       "--store",
       "--empId",
@@ -21,30 +13,23 @@ describe("selectOption", function() {
       "--beverage",
       "pine-apple"
     ];
-    const date = "2019-11-22T09:55:53.546z";
+    const date = new Date("2019-11-25T02:59:29.363Z").toJSON();
+    const requiredProperties = {
+      loader: (filePath, encodingType) => "[]",
+      writer: (filePath, transactionsRecord, encodingType) => true,
+      date: () => new Date("2019-11-25T02:59:29.363Z").toJSON(),
+      filePath: "somePath",
+      encoding: "utf-8",
+      isFileExists: filePath => true
+    };
 
-    const actual = selectOption(
-      userArguments,
-      loadData,
-      filePath,
-      writeData,
-      getDate,
-      date
-    );
+    const actual = selectOption(userArguments, requiredProperties);
     const expected = "invalid transaction";
     assert.deepStrictEqual(actual, expected);
   });
 
-  describe("saveBeverageDetails", function() {
-    it("should perform save transaction when arguments are valid for save", function() {
-      const getDate = function(date) {
-        return date;
-      };
-      const loadData = function(path) {
-        return [];
-      };
-      const writeData = function(path, data) {};
-      const filePath = "./src/beverageData.json";
+  describe("saveBeverages", function() {
+    it("should  create and save employ beverage data to file if file not exists", function() {
       const userArguments = [
         "--save",
         "--empId",
@@ -54,275 +39,216 @@ describe("selectOption", function() {
         "--beverage",
         "pine-apple"
       ];
-      const date = "2019-11-22T09:55:53.546z";
+      const requiredProperties = {
+        loader: (filePath, encodingType) => "[]",
+        writer: (filePath, transactionsRecord, encodingType) => undefined,
+        date: () => new Date("2019-11-25T02:59:29.363Z"),
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: filePath => true
+      };
 
-      const actual = selectOption(
-        userArguments,
-        loadData,
-        filePath,
-        writeData,
-        getDate,
-        date
-      );
+      const actual = selectOption(userArguments, requiredProperties);
       const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-22T09:55:53.546z\n";
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
-    it("should create usage when given arguments are not sufficient for save", function() {
-      const filePath = "./src/beverageData.json";
-      const loadData = function(filePath) {
-        return [];
-      };
-
-      const writeData = function(filePath, beverageData) {};
-      const getDate = function(date) {
-        return date;
-      };
-      const date = "2019-11-25T02:59:29.363z";
-      const actual = selectOption(
-        ["--save", "--empId", "12343", "--qty", "1"],
-        loadData,
-        filePath,
-        writeData,
-        getDate,
-        date
-      );
-
-      const expected = [
-        "Usage :",
-        "node beverage.js ",
+    it("should  add employ beverage data to file when previous transactions of employ not present", function() {
+      const userArguments = [
         "--save",
-        "[--empId employId]",
-        "[--beverage beveragename]",
-        "[qty quantity]\n"
-      ].join("\n");
+        "--empId",
+        "12343",
+        "--qty",
+        "1",
+        "--beverage",
+        "pine-apple"
+      ];
+      const requiredProperties = {
+        loader: (filePath, encodingType) => "[]",
+        writer: (filePath, transactionsRecord, encodingType) => true,
+        date: () => new Date("2019-11-25T02:59:29.363Z"),
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: filePath => true
+      };
+
+      const actual = selectOption(userArguments, requiredProperties);
+      const expected =
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
+      assert.deepStrictEqual(actual, expected);
+    });
+
+    it("should  add employ beverage data to file when previous transactions of employ present", function() {
+      const userArguments = [
+        "--save",
+        "--empId",
+        "12343",
+        "--qty",
+        "1",
+        "--beverage",
+        "pine-apple"
+      ];
+      const requiredProperties = {
+        loader: (filePath, encoding) =>
+          '[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":"2019-11-25T02:59:29.363Z" }]',
+        writer: (filePath, transactionsRecord, encodingType) => true,
+        date: () => new Date("2019-11-25T02:59:29.363Z"),
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: filePath => true
+      };
+
+      const actual = selectOption(userArguments, requiredProperties);
+      const expected =
+        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
+      assert.deepStrictEqual(actual, expected);
+    });
+
+    it("should create usage when given arguments are not sufficient", function() {
+      const userArguments = ["--save", "--empId", "12343", "--qty", "1"];
+      const requiredProperties = {
+        loader: (filePath, encoding) =>
+          '[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":"2019-11-25T02:59:29.363Z" }]',
+        writer: (filePath, transactionsRecord, encodingType) => true,
+        date: () => new Date("2019-11-25T02:59:29.363Z"),
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: filePath => true
+      };
+
+      const actual = selectOption(userArguments, requiredProperties);
+
+      const expected =
+        "Usage :\nnode beverage.js \n--save\n[--empId employId]\n[--beverage beveragename]\n[qty quantity]\n";
 
       assert.deepStrictEqual(actual, expected);
     });
 
-    it("should  add employ beverage data to file when previous transactions of employ present for save", function() {
-      const filePath = "./src/beverageData.json";
-      const loadData = function(filePath) {
-        return [
-          {
-            empId: "12343",
-            beverage: "orange",
-            qty: "1",
-            date: "2019-11-26T03:50:39.363Z"
-          }
-        ];
+    it("should create usage when arguments are invalid", function() {
+      const userArguments = [
+        "--save",
+        "--empId",
+        "12343",
+        "--qty",
+        "1",
+        "--bev",
+        "apple"
+      ];
+      const requiredProperties = {
+        loader: (filePath, encoding) =>
+          '[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":"019-11-25T02:59:29.363Z" }]',
+        writer: (filePath, transactionsRecord, encodingType) => true,
+        date: () => new Date("2019-11-25T02:59:29.363Z"),
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: () => true
       };
 
-      const writeData = function(filePath, beverageData) {};
-      const getDate = function(date) {
-        return date;
-      };
-      const date = "2019-11-22T09:55:53.546z";
-      const actual = selectOption(
-        [
-          "--save",
-          "--empId",
-          "12343",
-          "--qty",
-          "1",
-          "--beverage",
-          "pine-apple"
-        ],
-        loadData,
-        filePath,
-        writeData,
-        getDate,
-        date
-      );
+      const actual = selectOption(userArguments, requiredProperties);
+
       const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-22T09:55:53.546z\n";
-      assert.deepStrictEqual(actual, expected);
-    });
+        "Usage :\nnode beverage.js \n--save\n[--empId employId]\n[--beverage beveragename]\n[qty quantity]\n";
 
-    it("should  add employ beverage data to file when previous transactions of employ not present for save", function() {
-      const filePath = "./src/beverageData.json";
-      const loadData = function(filePath) {
-        return [];
-      };
-
-      const writeData = function(filePath, beverageData) {};
-      const getDate = function(date) {
-        return date;
-      };
-      const date = "2019-11-25T02:59:29.363z";
-      const actual = selectOption(
-        [
-          "--save",
-          "--empId",
-          "12343",
-          "--qty",
-          "1",
-          "--beverage",
-          "pine-apple"
-        ],
-        loadData,
-        filePath,
-        writeData,
-        getDate,
-        date
-      );
-      const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z\n";
-      assert.deepStrictEqual(actual, expected);
-    });
-
-    it("should  create and save employ beverage data to file if file not exists for save", function() {
-      const loadData = function(filePath) {
-        return [];
-      };
-
-      const writeData = function(filePath, beverageData) {};
-      const getDate = function(date) {
-        return date;
-      };
-      const date = "2019-11-25T02:59:29.363z";
-      const actual = selectOption(
-        [
-          "--save",
-          "--empId",
-          "12343",
-          "--qty",
-          "1",
-          "--beverage",
-          "pine-apple"
-        ],
-        loadData,
-        "./src/beverage",
-        writeData,
-        getDate,
-        date
-      );
-      const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363z\n";
       assert.deepStrictEqual(actual, expected);
     });
   });
 
-  describe("queryBeverageDetails", function() {
-    it("should display the beverages history of employ when arguments are valid for query", function() {
-      const loadData = function(path) {
-        return [
-          {
-            empId: "12343",
-            beverage: "orange",
-            qty: "1",
-            date: "2019-11-26T03:50:39.363Z"
-          }
-        ];
-      };
-
-      const getDate = function(date) {
-        return date;
-      };
-
-      const writeData = function(path, data) {};
-      const actual = selectOption(
-        ["--query", "--empId", "12343"],
-        loadData,
-        "./data/beverageData.json",
-        writeData,
-        getDate,
-        "2019-11-26T03:50:39.363Z"
-      );
-      const expected =
-        "employId,beverage,quantity,date\n12343,orange,1,2019-11-26T03:50:39.363Z\nTotal juices :1";
-      assert.deepStrictEqual(actual, expected);
-    });
-
-    it("should display usage when given arguments not sufficient for query", function() {
-      const loadData = function(path) {
-        return [];
-      };
-
-      const actual = selectOption(
-        ["--query", "--empId"],
-        loadData,
-        "./data/beverageData.json"
-      );
-      const expected =
-        "usage :\nnode beverage.js --query [--empId id] [--date date]\n";
-      assert.deepStrictEqual(actual, expected);
-    });
-
-    it("should display the beverages history of given employ id if exists for query", function() {
-      const filePath = "./data/beverageData.json";
-      const loadData = function(filePath) {
-        return [
-          {
-            empId: "12345",
-            beverage: "orange",
-            qty: "1",
-            date: "2019-11-26T03:51:44.546Z"
-          }
-        ];
-      };
-
-      const writeData = function(filePath, beverageData) {};
-      const getDate = function(date) {
-        return date;
+  describe("queryBeverages", function() {
+    it("should display the beverages history of given employ id if exists", function() {
+      const date = new Date("2019-11-25T02:59:29.363Z").toJSON();
+      const requiredProperties = {
+        loader: (filePath, encoding) => {
+          return '[{"empId": "12345","beverage": "orange","qty": "1","date":"2019-11-25T02:59:29.363Z"}]';
+        },
+        writer: (filePath, transactionsRecord, encodingType) => undefined,
+        date: date,
+        filePath: "somePath",
+        encoding: "utf8",
+        isFileExists: filePath => true
       };
       const actual = selectOption(
         ["--query", "--empId", "12345"],
-        loadData,
-        filePath,
-        writeData,
-        getDate,
-        "2019-11-26T03:51:44.546Z"
+        requiredProperties
       );
-      const expected = [
-        "employId,beverage,quantity,date",
-        "12345,orange,1,2019-11-26T03:51:44.546Z",
-        "Total juices :1"
-      ].join("\n");
+      const expected =
+        "employId,beverage,quantity,date\n12345,orange,1,2019-11-25T02:59:29.363Z\nTotal juices :1";
       assert.deepStrictEqual(actual, expected);
     });
 
-    it("should display file not found when given file path not exists for query", function() {
-      const loadData = function(path) {
-        return [];
+    it("should display the error msg when given employ beverage history not exists", function() {
+      const date = new Date("2019-11-25T02:59:29.363Z").toJSON();
+      const requiredProperties = {
+        loader: (filePath, encoding) => {
+          return '[{"empId": "12345","beverage": "orange","qty": "1","date":"2019-11-25T02:59:29.363Z"}]';
+        },
+        writer: (filePath, transactionsRecord, encodingType) => undefined,
+        date: date,
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: filePath => true
       };
-
       const actual = selectOption(
-        ["--query", "--empId", "12346"],
-        loadData,
-        "./data/beverage.json"
+        ["--query", "--empId", "12343"],
+        requiredProperties
       );
-      const expected = "file not found\n";
+      const expected = "no previous records\n";
       assert.deepStrictEqual(actual, expected);
     });
 
-    it("should display usage when given arguments are invalid for query", function() {
-      const filePath = "./data/beverageData.json";
-      const loadData = function(filePath) {
-        return [
-          {
-            empId: "12345",
-            beverage: "orange",
-            qty: "1",
-            date: "2019-11-26T03:51:44.546Z"
-          }
-        ];
+    it("should display file not found when given file path not exists", function() {
+      const date = new Date("2019-11-25T02:59:29.363Z").toJSON();
+      const requiredProperties = {
+        loader: (filePath, encoding) => {
+          return '[{"empId": "12345","beverage": "orange","qty": "1","date": "2019-11-25T02:59:29.363Z"]';
+        },
+        writer: (filePath, transactionsRecord, encodingType) => undefined,
+        date: date,
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: filePath => false
       };
+      const actual = selectOption(
+        ["--query", "--empId", "12345"],
+        requiredProperties
+      );
+      const expected = "no previous records\n";
+      assert.deepStrictEqual(actual, expected);
+    });
 
-      const writeData = function(filePath, beverageData) {};
-      const getDate = function(date) {
-        return date;
+    it("should display usage when given arguments are invalid", function() {
+      const date = new Date("2019-11-30T12:34:43.234Z").toJSON();
+      const requiredProperties = {
+        loader: (filePath, encoding) => {
+          return `[{empId: "12345",beverage: "orange",qty: "1",date: ${date}]`;
+        },
+        writer: (filePath, transactionsRecord, encodingType) => undefined,
+        date: date,
+        filePath: "somePath",
+        encoding: "utf8",
+        isFileExists: filePath => true
       };
-
+      const expected =
+        "usage :\nnode beverage.js --query [--empId id] [--date date]\n";
       const actual = selectOption(
         ["--query", "--empI", "12345"],
-        loadData,
-        filePath,
-        writeData,
-        getDate,
-        "2019-11-26T03:51:44.546Z"
+        requiredProperties
       );
+      assert.deepStrictEqual(actual, expected);
+    });
+
+    it("should display usage when given arguments not sufficient", function() {
+      const date = new Date("2019-11-25T02:59:29.363Z").toJSON();
+      const requiredProperties = {
+        loader: () =>
+          `[{ "empId": 25275, "beverage": "orange", "qty": 1, "date":${date}}]`,
+        writer: (filePath, transactionsRecord, encodingType) => undefined,
+        date: date,
+        filePath: "somePath",
+        encoding: "utf-8",
+        isFileExists: () => true
+      };
+      const actual = selectOption(["--query", "--empId"], requiredProperties);
       const expected =
         "usage :\nnode beverage.js --query [--empId id] [--date date]\n";
       assert.deepStrictEqual(actual, expected);
