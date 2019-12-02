@@ -23,7 +23,7 @@ describe("saveBeverages", function() {
 
     const actual = saveBeverageDetails(userArguments, requiredProperties);
     const expected = [
-      "transaction recorded:\nemploy id,beverage,quantity,date",
+      "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date",
       [
         {
           beverage: "pine-apple",
@@ -56,7 +56,7 @@ describe("saveBeverages", function() {
 
     const actual = saveBeverageDetails(userArguments, requiredProperties);
     const expected = [
-      "transaction recorded:\nemploy id,beverage,quantity,date",
+      "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date",
       [
         {
           beverage: "pine-apple",
@@ -90,7 +90,7 @@ describe("saveBeverages", function() {
 
     const actual = saveBeverageDetails(userArguments, requiredProperties);
     const expected = [
-      "transaction recorded:\nemploy id,beverage,quantity,date",
+      "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date",
       [
         {
           beverage: "pine-apple",

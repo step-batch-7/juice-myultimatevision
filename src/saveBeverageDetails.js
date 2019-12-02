@@ -1,6 +1,5 @@
 const fs = require("fs");
-const loadData = require("./utils").loadData;
-const writeData = require("./utils").writeData;
+const { loadData, writeData } = require("./utils");
 
 const createNewTransaction = function(beverageDetails, date) {
   const empBeverageData = {
@@ -11,10 +10,6 @@ const createNewTransaction = function(beverageDetails, date) {
   };
   return empBeverageData;
 };
-
-// const isFileExist = function(filePath) {
-//   return fs.existsSync(filePath);
-// };
 
 const createUsage = function() {
   const usage = [
@@ -55,15 +50,15 @@ const saveBeverageDetails = function(beverageDetails, requiredProperties) {
     isFileExists,
     filePath
   } = requiredProperties;
-  const empBeverageData = createNewTransaction(beverageDetails, date);
   if (!isValidDetails(beverageDetails)) return createUsage();
-  transactionData = loadData(filePath, loader, isFileExists, encoding);
+  const transactionData = loadData(filePath, loader, isFileExists, encoding);
+  const empBeverageData = createNewTransaction(beverageDetails, date);
   transactionData.push(empBeverageData);
   writeData(filePath, writer, transactionData, encoding);
   return [
-    "transaction recorded:\nemploy id,beverage,quantity,date",
+    "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date",
     [empBeverageData]
   ];
 };
 
-exports.saveBeverageDetails = saveBeverageDetails;
+module.exports = { saveBeverageDetails };

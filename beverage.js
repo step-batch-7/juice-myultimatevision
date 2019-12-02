@@ -1,8 +1,7 @@
-const selectOption = require("./src/selectOption").selectOption;
 const fs = require("fs");
+const { selectOption } = require("./src/selectOption");
 
 const main = function() {
-  console.log("Anna Juice Ltd");
   const requiredProperties = {
     loader: fs.readFileSync,
     writer: fs.writeFileSync,

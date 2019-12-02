@@ -1,4 +1,4 @@
-const getDataById = require("../src/queryBeverages").getDataById;
+const { getDataById } = require("../src/queryBeverages");
 const assert = require("assert");
 
 describe("getDataById", function() {

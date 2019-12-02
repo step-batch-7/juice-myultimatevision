@@ -16,7 +16,7 @@ describe("queryBeverages", function() {
     };
     const actual = queryBeverages(["--empId", "12345"], requiredProperties);
     const expected = [
-      "employId,beverage,quantity,date",
+      "Employee ID, Beverage, Quantity, Date",
       [
         {
           empId: "12345",
@@ -25,7 +25,7 @@ describe("queryBeverages", function() {
           date: "2019-11-25T02:59:29.363Z"
         }
       ],
-      "Total juices :1"
+      "Total :1 Juice"
     ];
     assert.deepStrictEqual(actual, expected);
   });
@@ -43,7 +43,11 @@ describe("queryBeverages", function() {
       isFileExists: filePath => true
     };
     const actual = queryBeverages(["--empId", "12343"], requiredProperties);
-    const expected = ["no previous records", []];
+    const expected = [
+      "Employee ID, Beverage, Quantity, Date",
+      [],
+      "Total :0 Juices"
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -60,7 +64,11 @@ describe("queryBeverages", function() {
       isFileExists: filePath => false
     };
     const actual = queryBeverages(["--empId", "12345"], requiredProperties);
-    const expected = ["no previous records", []];
+    const expected = [
+      "Employee ID, Beverage, Quantity, Date",
+      [],
+      "Total :0 Juices"
+    ];
     assert.deepStrictEqual(actual, expected);
   });
 

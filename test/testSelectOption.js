@@ -24,7 +24,10 @@ describe("selectOption", function() {
     };
 
     const actual = selectOption(userArguments, requiredProperties);
-    const expected = "invalid transaction";
+    const expected = [
+      "Usage :,node beverage.js ,--save,[--empId employId],[--beverage beveragename],[qty quantity]",
+      "--query,[--empId employId],[--beverage beveragename][date yyyy-mm-dd]"
+    ].join("\n");
     assert.deepStrictEqual(actual, expected);
   });
 
@@ -50,7 +53,7 @@ describe("selectOption", function() {
 
       const actual = selectOption(userArguments, requiredProperties);
       const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
+        "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -75,7 +78,7 @@ describe("selectOption", function() {
 
       const actual = selectOption(userArguments, requiredProperties);
       const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
+        "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -101,7 +104,7 @@ describe("selectOption", function() {
 
       const actual = selectOption(userArguments, requiredProperties);
       const expected =
-        "transaction recorded:\nemploy id,beverage,quantity,date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
+        "Transaction Recorded:\nEmployee ID, Beverage, Quantity, Date\n12343,pine-apple,1,2019-11-25T02:59:29.363Z\n";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -172,7 +175,7 @@ describe("selectOption", function() {
         requiredProperties
       );
       const expected =
-        "employId,beverage,quantity,date\n12345,orange,1,2019-11-25T02:59:29.363Z\nTotal juices :1";
+        "Employee ID, Beverage, Quantity, Date\n12345,orange,1,2019-11-25T02:59:29.363Z\nTotal :1 Juice";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -192,7 +195,7 @@ describe("selectOption", function() {
         ["--query", "--empId", "12343"],
         requiredProperties
       );
-      const expected = "no previous records\n";
+      const expected = "Employee ID, Beverage, Quantity, Date\nTotal :0 Juices";
       assert.deepStrictEqual(actual, expected);
     });
 
@@ -212,7 +215,7 @@ describe("selectOption", function() {
         ["--query", "--empId", "12345"],
         requiredProperties
       );
-      const expected = "no previous records\n";
+      const expected = "Employee ID, Beverage, Quantity, Date\nTotal :0 Juices";
       assert.deepStrictEqual(actual, expected);
     });
 

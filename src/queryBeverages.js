@@ -1,10 +1,11 @@
-const fs = require("fs");
-const loadData = require("./utils").loadData;
+const { loadData } = require("./utils");
 
 const countJuices = function(employBeverageData) {
-  return employBeverageData.reduce(function(noOfJuices, record) {
+  const noOfJuices = employBeverageData.reduce(function(noOfJuices, record) {
     return noOfJuices + +record.qty;
   }, 0);
+  const suffix = noOfJuices == 1 ? " Juice" : " Juices";
+  return "Total :" + noOfJuices + suffix;
 };
 
 const isValidArguments = function(userArguments) {
@@ -24,32 +25,7 @@ const getPairedArguments = function(userArguments) {
   return pairedArguments;
 };
 
-const queryBeverages = function(userArguments, requiredProperties) {
-  const { loader, encoding, date, isFileExists, filePath } = requiredProperties;
-  if (!isValidArguments(userArguments))
-    return ["usage :\nnode beverage.js --query [--empId id] [--date date]", []];
-  const pairedArguments = getPairedArguments(userArguments);
-  const employId = pairedArguments["--empId"];
-
-  const userDate = pairedArguments["--date"];
-  const beverage = pairedArguments["--beverage"];
-  const beverageData = loadData(filePath, loader, isFileExists, encoding);
-
-  employBeverageData = getDataByDate(
-    getDataByBeverage(getDataById(beverageData, employId), beverage),
-    userDate
-  );
-  if (employBeverageData.length == 0) {
-    return ["no previous records", []];
-  }
-  return [
-    "employId,beverage,quantity,date",
-    employBeverageData,
-    "Total juices :" + countJuices(employBeverageData)
-  ];
-};
-
-getDataById = function(beveragesData, empId) {
+const getDataById = function(beveragesData, empId) {
   const filteredTransactionOnId =
     empId &&
     beveragesData.filter(function(beverageData) {
@@ -59,7 +35,7 @@ getDataById = function(beveragesData, empId) {
   return filteredTransactionOnId || beveragesData;
 };
 
-getDataByDate = function(beveragesData, date) {
+const getDataByDate = function(beveragesData, date) {
   const filteredTransactionOnDate =
     date &&
     beveragesData.filter(function(beverageData) {
@@ -68,7 +44,7 @@ getDataByDate = function(beveragesData, date) {
   return filteredTransactionOnDate || beveragesData;
 };
 
-getDataByBeverage = function(beveragesData, beverage) {
+const getDataByBeverage = function(beveragesData, beverage) {
   const filteredTransactionOnBeverage =
     beverage &&
     beveragesData.filter(function(beverageData) {
@@ -77,8 +53,31 @@ getDataByBeverage = function(beveragesData, beverage) {
   return filteredTransactionOnBeverage || beveragesData;
 };
 
-exports.queryBeverages = queryBeverages;
-exports.getDataByDate = getDataByDate;
-exports.getDataByBeverage = getDataByBeverage;
-exports.getDataById = getDataById;
-exports.isValidArguments = isValidArguments;
+const queryBeverages = function(userArguments, requiredProperties) {
+  const { loader, encoding, date, isFileExists, filePath } = requiredProperties;
+  if (!isValidArguments(userArguments))
+    return ["usage :\nnode beverage.js --query [--empId id] [--date date]", []];
+  const pairedArguments = getPairedArguments(userArguments);
+  const employId = pairedArguments["--empId"];
+
+  const userDate = pairedArguments["--date"];
+  const beverage = pairedArguments["--beverage"];
+  const TransactionData = loadData(filePath, loader, isFileExists, encoding);
+  const filteredTxnOnId = getDataById(TransactionData, employId);
+  const filteredTxnOnBeverage = getDataByBeverage(filteredTxnOnId, beverage);
+  const filteredBeverageData = getDataByDate(filteredTxnOnBeverage, userDate);
+
+  return [
+    "Employee ID, Beverage, Quantity, Date",
+    filteredBeverageData,
+    countJuices(filteredBeverageData)
+  ];
+};
+
+module.exports = {
+  queryBeverages,
+  getDataByDate,
+  getDataByBeverage,
+  getDataById,
+  isValidArguments
+};
