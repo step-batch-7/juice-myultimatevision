@@ -1,14 +1,15 @@
 const fs = require("fs");
 const { selectOption } = require("./src/selectOption");
+const { timeStamp, getDataStorePath } = require("./src/config");
 
 const main = function() {
   const requiredProperties = {
     loader: fs.readFileSync,
     writer: fs.writeFileSync,
     encoding: "utf8",
-    date: () => new Date(),
+    date: () => timeStamp(process.env),
     isFileExists: fs.existsSync,
-    filePath: "./data/beverageData.json"
+    filePath: getDataStorePath(process.env)
   };
   const userArguments = process.argv.slice(2);
   console.log(selectOption(userArguments, requiredProperties));
